@@ -7,12 +7,8 @@ class Task(db.Model):
     name = db.Column(db.String) 
     description = db.Column(db.String)
     reward = db.Column(db.Integer)
-    difficulty = db.Column(db.Integer)
-    
     resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'))
-    assigned_to = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    user = db.relationship('User', back_populates="tasks")
     resource = db.relationship('Resource', back_populates="tasks")
 
     def __repr__(self) -> str:
@@ -31,15 +27,3 @@ class Resource(db.Model):
     def __repr__(self) -> str:
         return f"Resource: {self.name}"
         
-
-class User(db.Model):
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String)
-    experience = db.Column(db.Integer)
-
-    tasks = db.relationship('Task', back_populates="user")
-
-    def __repr__(self) -> str:
-        return f"User: {self.name}"
