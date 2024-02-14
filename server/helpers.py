@@ -2,7 +2,6 @@ import time
 from rich import print
 import random
 
-
 def print_slowly(output):
     for char in output:
         print(char, end='', flush=True)
@@ -18,4 +17,7 @@ def print_quickly(output):
     print()
 
 def descision():
-    return random.random() < 0.75
+    return random.random() < 0.50
+
+
+
