@@ -3,6 +3,7 @@ from rich import print
 import random
 from rich.console import Console
 from models import *
+from playsound import playsound
 
 console = Console()
 
@@ -23,81 +24,22 @@ def print_quickly(output):
 def descision():
     return random.random() < 0.50
 
-def decrease_resource():
+
+def decrease_resource(difficulty):
+    if difficulty == "hard":
+        range_low = 15
+        range_high = 25
+    else:
+        range_low = 5
+        range_high = 15
+
     r = [1, 2, 3, 4]
     resource = db.session.get(Resource, random.choice(r))
-    rand_num = random.randint(5,15)
+    rand_num = random.randint(range_low,range_high)
     resource.quantity -= rand_num
     db.session.commit()
+    # print(range_low, range_high)
     console.print(f"[red]Your {resource.name} reserves decreased by {rand_num}% due to normal usage.[/red]")
-
-# def powerup():
-#     filename = './sounds/smw_message_block.wav'
-#     wave_obj = sa.WaveObject.from_wave_file(filename)
-#     play_obj = wave_obj.play()
-#     play_obj.wait_done()  
-
-# def powerdown():
-#     filename = '/sounds/smw_spring_jump.wav'
-#     wave_obj = sa.WaveObject.from_wave_file(filename)
-#     play_obj = wave_obj.play()
-#     play_obj.wait_done()  
-
-def goodbye(username):
-    print_quickly("-----------------------------------------------------------------------------------------------------")
-    console.print(f"Goodbye Commander [bold magenta]{username}[/bold magenta], have a safe return journey to Earth.", justify="center")
-    print("""\
-                    o                .        ___---___                    .                   
-                            .              .--\        --.     .     .         .
-                                         ./.;_.\     __/~ \.     
-                                        /;  / `-'  __\    . \                            
-                    .         .       / ,--'     / .   .;   \        |
-                                     | .|       /       __   |      -O-       .
-                                    |__/    __ |  . ;   \ | . |      |
-                                    |      /  \\_    . ;| \___|    
-                        .    o      |      \  .~\\___,--'     |           .
-                                     |     | . ; ~~~~\_    __|1
-                         |             \    \   .  .  ; \  /_/   .
-                        -O-        .    \   /         . |  ~/                  .
-                         |    .          ~\ \   .      /  /~          o
-                        .                   ~--___ ; ___--~       
-                                    .           ---         .              
-            """)
-
-def you_died(username):
-    print_quickly("-----------------------------------------------------------------------------------------------------")
-    print("""\
-          
-                                    ██████╗  █████╗ ███╗   ███╗███████╗       
-                                    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝       
-                                    ██║  ███╗███████║██╔████╔██║█████╗         
-                                    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝         
-                                    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗       
-                                    ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝       
-                                                                            
-                                    ██████╗ ██╗   ██╗███████╗██████╗          
-                                    ██╔═══██╗██║   ██║██╔════╝██╔══██╗         
-                                    ██║   ██║██║   ██║█████╗  ██████╔╝         
-                                    ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗         
-                                    ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║         
-                                    ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝                  
-            
-         """)
-    console.print(f"One or more of the base's resources were depleted. Better luck next time, Commander [bold]{username}[/bold].", style="magenta", justify="center")
-
-def you_win(username):
-    print_quickly("-----------------------------------------------------------------------------------------------------")
-    print("""\
-                                    
-                          ██╗   ██╗ ██████╗ ██╗   ██╗    ██╗    ██╗██╗███╗   ██╗
-                          ╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║    ██║██║████╗  ██║
-                           ╚████╔╝ ██║   ██║██║   ██║    ██║ █╗ ██║██║██╔██╗ ██║
-                            ╚██╔╝  ██║   ██║██║   ██║    ██║███╗██║██║██║╚██╗██║
-                             ██║   ╚██████╔╝╚██████╔╝    ╚███╔███╔╝██║██║ ╚████║
-                             ╚═╝    ╚═════╝  ╚═════╝      ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝            
-                                        
-         """)
-    console.print(f"All base resources levels are over 100%. Congratulations, Commander [bold]{username}[/bold]!", style="magenta", justify="center")
 
 def resource_depleted():
     resources = Resource.query.all()
@@ -115,6 +57,89 @@ def resources_filled():
             resources_full = False
     return resources_full
 
+def powerup():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_coin.wav')
+
+def powerdown():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_pipe.wav') 
+
+def goodnews():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_powerup.wav') 
+
+def badnews():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_warning.wav') 
+
+def win_sound():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_stage_clear.wav')
+
+def lose_sound():    
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_mariodie.wav')
+
+def intro_sound():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/sm64_exit_course_pause_menu.wav')
+
+def goodbye_sound():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smas-smb3_peach-letter.wav')
+
+
+def goodbye(username):
+    print_quickly("-----------------------------------------------------------------------------------------------------")
+    console.print(f"Goodbye Commander [bold]{username}[/bold], have a safe return journey to Earth.",style="magenta", justify="center")
+    print("""\
+                    o                .        ___---___                    .                   
+                            .              .--\        --.     .     .         .
+                                         ./.;_.\     __/~ \.     
+                                        /;  / `-'  __\    . \                            
+                    .         .       / ,--'     / .   .;   \        |
+                                     | .|       /       __   |      -O-       .
+                                    |__/    __ |  . ;   \ | . |      |
+                                    |      /  \\_    . ;| \___|    
+                        .    o      |      \  .~\\___,--'     |           .
+                                     |     | . ; ~~~~\_    __|1
+                         |             \    \   .  .  ; \  /_/   .
+                        -O-        .    \   /         . |  ~/                  .
+                         |    .          ~\ \   .      /  /~          o
+                        .                   ~--___ ; ___--~       
+                                    .           ---         .              
+            """)
+    goodbye_sound()
+def you_died(username):
+    print_quickly("-----------------------------------------------------------------------------------------------------")
+    print("""\
+          
+                                  ██████╗  █████╗ ███╗   ███╗███████╗       
+                                 ██╔════╝ ██╔══██╗████╗ ████║██╔════╝       
+                                 ██║  ███╗███████║██╔████╔██║█████╗         
+                                 ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝         
+                                 ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗       
+                                  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝       
+                                                                         
+                                  ██████╗ ██╗   ██╗███████╗██████╗          
+                                 ██╔═══██╗██║   ██║██╔════╝██╔══██╗         
+                                 ██║   ██║██║   ██║█████╗  ██████╔╝         
+                                 ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗         
+                                 ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║         
+                                  ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝                  
+            
+         """)
+    console.print(f"One or more of the base's resources were depleted. Better luck next time, Commander [bold]{username}[/bold].", style="magenta", justify="center")
+    lose_sound()
+
+def you_win(username):
+    print_quickly("-----------------------------------------------------------------------------------------------------")
+    print("""\
+                                    
+                          ██╗   ██╗ ██████╗ ██╗   ██╗    ██╗    ██╗██╗███╗   ██╗
+                          ╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║    ██║██║████╗  ██║
+                           ╚████╔╝ ██║   ██║██║   ██║    ██║ █╗ ██║██║██╔██╗ ██║
+                            ╚██╔╝  ██║   ██║██║   ██║    ██║███╗██║██║██║╚██╗██║
+                             ██║   ╚██████╔╝╚██████╔╝    ╚███╔███╔╝██║██║ ╚████║
+                             ╚═╝    ╚═════╝  ╚═════╝      ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝            
+                                        
+         """)
+    console.print(f"All base resources levels are over 100%. Congratulations, Commander [bold]{username}[/bold]!", style="magenta", justify="center")
+    win_sound()
+
 def seed_tasks():
     Task.query.delete()
 
@@ -129,7 +154,7 @@ def seed_tasks():
 
     tasks.append(Task(
         name = "Change Air Filters", 
-        description = "clean and replace the life support system air filters", 
+        description = "clean and replace the HVAC system air filters", 
         reward = random.randint(10,40),
         resource_id = air.id 
     ))
@@ -153,7 +178,7 @@ def seed_tasks():
     ))
     tasks.append(Task(
         name = "Repair Air Conditioning", 
-        description = "repair the main condensor on the air conditioning unit", 
+        description = "repair the main condensor on the A/C unit", 
         reward = random.randint(10,40),
         resource_id = air.id 
     ))
@@ -189,13 +214,13 @@ def seed_tasks():
     ))
     tasks.append(Task(
         name = "Refill Fuel Cells", 
-        description = "refill the base's fuel cells with the refined elements", 
+        description = "refill the base's fuel cells with refined ore", 
         reward = random.randint(10,40),
         resource_id = fuel.id 
     ))
     tasks.append(Task(
         name = "Test Bacterial Levels", 
-        description = "test the water supply for bacteria and other organisms", 
+        description = "test the water supply for bacteria and organisms", 
         reward = random.randint(10,40),
         resource_id = water.id 
     ))              
@@ -235,6 +260,7 @@ def random_event():
                                             (__||
 
                 """)
+            badnews()
         elif rand_ev == 2:
             # print("TWO")
             food = db.session.get(Resource, 2)
@@ -257,6 +283,7 @@ def random_event():
                                           .:        .       !                              
 
                 """)
+            badnews()
         elif rand_ev == 3:
             # print("THREE")
             air = db.session.get(Resource, 1)
@@ -275,12 +302,13 @@ def random_event():
                                             '-..-'
                                 
                 """)
+            badnews()
         elif rand_ev == 4:
             # print("FOUR")
             water = db.session.get(Resource, 4)
             water.quantity -= 20
             db.session.commit()
-            print_quickly("-----------------------------------------------------------------------------------------------------")
+            print_quickly("-----------------------------------------------------------------------------------------------------")            
             console.print("There was an explosion in the hydrogen processing plant, resulting in the loss of 20% of your water reserves.", style="magenta", justify="center")
             console.print("""    
 
@@ -295,7 +323,8 @@ def random_event():
                                     _____________/_ __ \_____________                                                        
 
                             
-                """)   
+                """)
+            badnews()   
         elif rand_ev == 5:
             # print("FOUR")
             water = db.session.get(Resource, 1)
@@ -319,6 +348,7 @@ def random_event():
 
                             
                 """)
+            goodnews()
         elif rand_ev == 6:
             # print("FOUR")
             water = db.session.get(Resource, 3)
@@ -343,6 +373,7 @@ def random_event():
 
                             
                 """)
+            goodnews()
         elif rand_ev == 7:
             # print("FOUR")
             water = db.session.get(Resource, 2)
@@ -364,6 +395,7 @@ def random_event():
                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                    
                             
                 """)
+            goodnews()
         elif rand_ev == 8:
             # print("FOUR")
             water = db.session.get(Resource, 4)
@@ -389,6 +421,7 @@ def random_event():
                                                                         `------'`                                                    
 
                             
-                """) 
+                """)
+            goodnews() 
    
                 

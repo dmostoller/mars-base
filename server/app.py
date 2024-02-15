@@ -12,7 +12,7 @@ if __name__ == "__main__":
     migrate.init_app(app, db)
     console = Console() 
 
-    def task_menu(username): 
+    def task_menu(username, difficulty): 
         if not resource_depleted():
             if not resources_filled():
                 print_quickly("-----------------------------------------------------------------------------------------------------")
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 )
                 console.print(Align.center(table))
 
-                def load_tasks(username, resource):    
+                def load_tasks(username, resource, difficulty):    
                     tasks_remaining = Task.query.first()
                     if not tasks_remaining:
                         seed_tasks()
@@ -93,30 +93,30 @@ if __name__ == "__main__":
                     if resource != None:
                         console.print("Input [green]all[/green] to show all tasks.")
                     console.print("Input [red]exit[/red] to leave the game.") 
-                    def task_select(username):
+                    def task_select(username, difficulty):
                         task_response = input()
                         if task_response.lower() == "exit":
                             goodbye(username)
                         elif task_response.lower() == "refresh":
                             seed_tasks()
-                            load_tasks(username, None) 
+                            load_tasks(username, None, difficulty) 
                         elif task_response.lower() == "all":
-                            load_tasks(username, None)   
+                            load_tasks(username, None, difficulty)   
                         elif task_response.lower() == "air":
-                            load_tasks(username, "air")
+                            load_tasks(username, "air", difficulty)
                         elif task_response.lower() == "food":
-                            load_tasks(username, "food")
+                            load_tasks(username, "food", difficulty)
                         elif task_response.lower() == "fuel":
-                            load_tasks(username, "fuel")
+                            load_tasks(username, "fuel", difficulty)
                         elif task_response.lower() == "water":
-                            load_tasks(username, "water")
+                            load_tasks(username, "water", difficulty)
                         elif task_response in current_tasks:                
                             task_to_do = db.session.get(Task, {task_response})
                             print_quickly("-----------------------------------------------------------------------------------------------------")
                             console.print(f"Would you like to [green italic]{task_to_do.name}[/green italic] and replenish your {task_to_do.resource.name} supply by {task_to_do.reward}%?")
                             console.print("Input [green]yes[/green] to attempt task or [red]back[/red] to select another task.")
                             print_quickly("-----------------------------------------------------------------------------------------------------")                        
-                            def execute_task(username):      
+                            def execute_task(username, difficulty):      
                                 attempt_task = input()
                                 if attempt_task.lower() == "yes":
                                     resource_to_update = db.session.get(Resource, {task_to_do.resource.id})            
@@ -135,36 +135,36 @@ if __name__ == "__main__":
                                         db.session.delete(task_to_do)
                                         db.session.commit()                 
                                         #return to main menu
-                                        decrease_resource()
-                                        # powerup()
+                                        decrease_resource(difficulty)
+                                        powerup()
                                         random_event()
-                                        task_menu(username)
+                                        task_menu(username, difficulty)
                                     else:
                                         print_quickly("-----------------------------------------------------------------------------------------------------")
                                         console.print(f"Your attempt to {task_to_do.name} has failed, please try again.", style="red")
-                                        decrease_resource()
-                                        # powerdown()
+                                        decrease_resource(difficulty)
+                                        powerdown()
                                         random_event()
-                                        task_menu(username)
+                                        task_menu(username, difficulty)
                                 elif attempt_task.lower() == "back":
                                     random_event()
-                                    task_menu(username)
+                                    task_menu(username, difficulty)
                                 else:
                                     console.print("Invalid input, please try again.", style="red")
-                                    execute_task(username)
-                            execute_task(username)
+                                    execute_task(username, difficulty)
+                            execute_task(username, difficulty)
                         else:
                             console.print("Invalid input, please try again.", style="red")
-                            task_select(username)
-                    task_select(username)    
-                load_tasks(username, None)
+                            task_select(username, difficulty)
+                    task_select(username, difficulty)    
+                load_tasks(username, None, difficulty)
             else:
                 you_win(username)
         else:
             you_died(username)
 
 
-    def main_menu(username):
+    def main_menu(username, difficulty):
         print("""\
                   
                       .    _     *       \|/   .       .      -*-              +
@@ -175,7 +175,7 @@ if __name__ == "__main__":
                       _.'-----'-._     *                  .
                     /             \__.__.--._______________
             """)
-        task_menu(username)  
+        task_menu(username, difficulty)  
 
 
     def welcome():
@@ -208,6 +208,7 @@ if __name__ == "__main__":
                 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝          
               """)
         console.print("Please enter your name to begin......", style="bold magenta", justify="center")
+        intro_sound()
         username = input()
         print_quickly("-----------------------------------------------------------------------------------------------------")
         console.print(f"Welcome to the UN Mars Base, Commander [bold magenta]{username}[/bold magenta]!")
@@ -225,10 +226,15 @@ if __name__ == "__main__":
         print_quickly("-----------------------------------------------------------------------------------------------------")
         console.print(f"Would you like to begin the game?")
         console.print("Please enter [green]start[/green] to begin, or [red]exit[/red] to quit.", style="bold")
+        console.print("For an extra challenge, enter [bold blue]hard[/bold blue] to begin the game in Hard Mode.", style="bold")
         def start():
             begin_res = input()
             if begin_res.lower() == "start":
-                main_menu(username)
+                difficulty = "easy"
+                main_menu(username, difficulty)
+            elif begin_res.lower() == "hard":
+                difficulty = "hard"
+                main_menu(username, difficulty)
             elif begin_res.lower() == "exit":
                 goodbye(username) 
             else:

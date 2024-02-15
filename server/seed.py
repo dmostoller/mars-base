@@ -12,7 +12,6 @@ if __name__ == "__main__":
 
         print("Loading available resources......")
 
-
         air = Resource(name = "Air", quantity = 50)
         food = Resource(name = "Food", quantity = 50)
         fuel = Resource(name = "Fuel", quantity = 50)        
@@ -30,7 +29,7 @@ if __name__ == "__main__":
 
         tasks.append(Task(
             name = "Change Air Filters", 
-            description = "clean and replace the life support system air filters", 
+            description = "clean and replace the HVAC system air filters", 
             reward = random.randint(10,40),
             resource_id = air.id 
         ))
@@ -54,7 +53,7 @@ if __name__ == "__main__":
         ))
         tasks.append(Task(
             name = "Repair Air Conditioning", 
-            description = "repair the main condensor on the air conditioning unit", 
+            description = "repair the main condensor on the A/C unit", 
             reward = random.randint(10,40),
             resource_id = air.id 
         ))
