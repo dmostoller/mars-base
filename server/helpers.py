@@ -26,23 +26,23 @@ def descision():
 
 def goodbye(username):
     print_quickly("-----------------------------------------------------------------------------------------------------")
-    console.print(f"Goodbye Ensign [bold magenta]{username}[/bold magenta], have a safe return journey to Earth.")
+    console.print(f"Goodbye Ensign [bold magenta]{username}[/bold magenta], have a safe return journey to Earth.", justify="center")
     print("""\
-            o               .        ___---___                    .                   
-                    .              .--\        --.     .     .         .
-                                ./.;_.\     __/~ \.     
-                                /;  / `-'  __\    . \                            
-            .        .       / ,--'     / .   .;   \        |
-                            | .|       /       __   |      -O-       .
-                            |__/    __ |  . ;   \ | . |      |
-                            |      /  \\_    . ;| \___|    
-                .    o       |      \  .~\\___,--'     |           .
-                            |     | . ; ~~~~\_    __|1
-                |             \    \   .  .  ; \  /_/   .
-                -O-        .    \   /         . |  ~/                  .
-                |    .          ~\ \   .      /  /~          o
-                .                   ~--___ ; ___--~       
-                            .          ---         .              
+                    o               .        ___---___                    .                   
+                            .              .--\        --.     .     .         .
+                                        ./.;_.\     __/~ \.     
+                                        /;  / `-'  __\    . \                            
+                    .        .       / ,--'     / .   .;   \        |
+                                    | .|       /       __   |      -O-       .
+                                    |__/    __ |  . ;   \ | . |      |
+                                    |      /  \\_    . ;| \___|    
+                        .    o       |      \  .~\\___,--'     |           .
+                                    |     | . ; ~~~~\_    __|1
+                        |             \    \   .  .  ; \  /_/   .
+                        -O-        .    \   /         . |  ~/                  .
+                        |    .          ~\ \   .      /  /~          o
+                        .                   ~--___ ; ___--~       
+                                    .          ---         .              
             """)
 
     return
