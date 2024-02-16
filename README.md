@@ -26,6 +26,7 @@ If you neglect any of your resources you will quickly run out, so you should try
 You can filter current tasks so you can more easily compare the rewards to select the highest yielding tasks. 
 If you run out of tasks, more will be sent from mission control automatically.
 Additionally, if you're not satifsified with the rewards for the available tasks, you can re-roll a new set of tasks with a new set of randomly generated reward values.
+You can type *add* on the task menu to manually create your own task for whichever resource you need, with a 50% potential reward.
 
 There are also random events that either deplete or replenish a given resource by 20%, so be careful not to let your resources levels get too low! You never know when disaster can strike!
 Finally, if you want an even bigger challenge, you can begin the game in hard mode, which effectively doubles the rate of resource depletion. Make sure your choices count!
