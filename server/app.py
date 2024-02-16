@@ -89,10 +89,11 @@ if __name__ == "__main__":
 
                     console.print(Align.center(table2))
                     console.print("Please input a [magenta]task number[/magenta] to select a task or a [magenta]resource name[/magenta] to view tasks for that resource.")
-                    console.print("Input [magenta]refresh[/magenta] to request new tasks from Mission Control.")
+                    console.print("Input [magenta]refresh[/magenta] to request new tasks from Mission Control, or [magenta]add[/magenta] to create a new task.")
                     if resource != None:
                         console.print("Input [green]all[/green] to show all tasks.")
                     console.print("Input [red]exit[/red] to leave the game.") 
+
                     def task_select(username, difficulty):
                         task_response = input()
                         if task_response.lower() == "exit":
@@ -100,6 +101,46 @@ if __name__ == "__main__":
                         elif task_response.lower() == "refresh":
                             seed_tasks()
                             load_tasks(username, None, difficulty) 
+                        elif task_response.lower() == "add":
+                            def create_task(username, difficulty):
+                                print_quickly("-----------------------------------------------------------------------------------------------------")
+                                console.print("Log a New Task", style="magenta bold", justify="center")
+                                console.print("Create a new task with a 50% reward", style="magenta", justify="center")
+                                print_quickly("-----------------------------------------------------------------------------------------------------")
+                                console.print("Please enter a [magenta]task name[/magenta] or type [red]back[/red] to return to the task menu.")
+                                new_task_name = input()
+                                def enter_name(username, difficulty):
+                                    if new_task_name.lower() != "back":
+                                        print_quickly("-----------------------------------------------------------------------------------------------------")
+                                        console.print("Please enter the [magenta]resource[/magenta] this task will effect or type [red]back[/red] to return to the task menu.")
+                                        new_task_resource = input()
+                                        def enter_resource(username, difficulty):
+                                            if new_task_resource.lower() == "air" or new_task_resource.lower() == "food" or new_task_resource.lower() == "fuel" or new_task_resource.lower() == "water":
+                                                print_quickly("-----------------------------------------------------------------------------------------------------")
+                                                console.print(f"Would you like to log the task [bold magenta]{new_task_name}[/bold magenta] to attempt to increase your [bold magenta]{new_task_resource}[/bold magenta] supply by 50%?")
+                                                console.print("Enter [green]yes[/green] to log task or [red]back[/red] to return to task menu.")
+                                                create_task_response = input()
+                                                def submit_task(username, difficulty):
+                                                    if create_task_response.lower() == "yes":
+                                                        add_task(new_task_name, new_task_resource)
+                                                        add_task_sound()
+                                                        load_tasks(username, None, difficulty)
+                                                    elif create_task_response.lower() == "back":
+                                                        load_tasks(username, None, difficulty)
+                                                    else:
+                                                        console.print("Invalid input, please try again.", style="red")
+                                                        enter_resource(username, difficulty)
+                                                submit_task(username, difficulty)
+                                            elif new_task_resource.lower() == "back":
+                                                load_tasks(username, None, difficulty)
+                                            else:
+                                                console.print("Invalid input, please try again.", style="red")
+                                                enter_name(username, difficulty)
+                                        enter_resource(username, difficulty)
+                                    else:
+                                        load_tasks(username, None, difficulty)
+                                enter_name(username, difficulty)
+                            create_task(username, difficulty)    
                         elif task_response.lower() == "all":
                             load_tasks(username, None, difficulty)   
                         elif task_response.lower() == "air":

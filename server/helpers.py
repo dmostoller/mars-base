@@ -4,6 +4,7 @@ import random
 from rich.console import Console
 from models import *
 from playsound import playsound
+from lorem_text import lorem
 
 console = Console()
 
@@ -57,6 +58,26 @@ def resources_filled():
             resources_full = False
     return resources_full
 
+
+def add_task(new_name, resource):
+    new_description = lorem.words(6) 
+    if resource.lower() == "air":
+        res_id = 1
+    elif resource.lower() == "food":
+        res_id = 2
+    elif resource.lower() == "fuel":
+        res_id = 3
+    elif resource.lower() == "water":
+        res_id = 4
+    new_task = Task(
+        name = new_name,
+        description = new_description,
+        reward = 50,
+        resource_id = res_id 
+    )
+    db.session.add(new_task)
+    db.session.commit()
+
 def powerup():
     playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smb_coin.wav')
 
@@ -81,6 +102,8 @@ def intro_sound():
 def goodbye_sound():
     playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smas-smb3_peach-letter.wav')
 
+def add_task_sound():
+    playsound('/Users/Kabayun/Development/code/phase-3/mars-base/sounds/smw_kick.wav')
 
 def goodbye(username):
     print_quickly("-----------------------------------------------------------------------------------------------------")
@@ -155,73 +178,73 @@ def seed_tasks():
     tasks.append(Task(
         name = "Change Air Filters", 
         description = "clean and replace the HVAC system air filters", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = air.id 
     ))
     tasks.append(Task(
         name = "Plant Seeds", 
         description = "plant new seeds in the soil of the hydroponic farm", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = food.id 
         ))
     tasks.append(Task(
         name = "Mine Ore", 
         description = "mine for ore that you can refined into fuel", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = fuel.id 
     ))
     tasks.append(Task(
         name = "Repair Valve", 
         description = "repair leaky valve on the main water pipe", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = water.id 
     ))
     tasks.append(Task(
         name = "Repair Air Conditioning", 
         description = "repair the main condensor on the A/C unit", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = air.id 
     ))
     tasks.append(Task(
         name = "Fertilize Soil", 
         description = "add fertilizer to the soil in the hydroponic farm", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = food.id 
     ))
     tasks.append(Task(
         name = "Refine Ore", 
         description = "refine the mined ore into its component elements", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = fuel.id 
     ))
     tasks.append(Task(
         name = "Clean Algae Vats", 
         description = "clean the algae vats that filter the water supply", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = water.id 
     ))
     tasks.append(Task(
         name = "Repair Fan Motor", 
         description = "repair or replace the motor for the air system fan", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = air.id 
     ))
     tasks.append(Task(
         name = "Till Soil", 
         description = "turn and till the soil of the hydroponic farm", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = food.id 
     ))
     tasks.append(Task(
         name = "Refill Fuel Cells", 
         description = "refill the base's fuel cells with refined ore", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = fuel.id 
     ))
     tasks.append(Task(
         name = "Test Bacterial Levels", 
         description = "test the water supply for bacteria and organisms", 
-        reward = random.randint(10,40),
+        reward = random.randint(10,35),
         resource_id = water.id 
     ))              
         
