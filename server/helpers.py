@@ -28,11 +28,11 @@ def descision():
 
 def decrease_resource(difficulty):
     if difficulty == "hard":
-        range_low = 15
-        range_high = 25
+        range_low = 25
+        range_high = 50
     else:
-        range_low = 5
-        range_high = 15
+        range_low = 10
+        range_high = 25
 
     r = [1, 2, 3, 4]
     resource = db.session.get(Resource, random.choice(r))
