@@ -18,7 +18,9 @@ naming_convention = {
 metadata = MetaData(naming_convention=naming_convention)
 
 app = Flask(__name__)
+# app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app=app, metadata=metadata)

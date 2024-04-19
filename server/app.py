@@ -12,7 +12,7 @@ if __name__ == "__main__":
     migrate.init_app(app, db)
     console = Console() 
 
-    def task_menu(username, difficulty): 
+    def task_menu(username, difficulty, user_id): 
         if not resource_depleted():
             if not resources_filled():
                 print_quickly("-----------------------------------------------------------------------------------------------------")
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 )
                 console.print(Align.center(table))
 
-                def load_tasks(username, resource, difficulty):    
+                def load_tasks(username, resource, difficulty, user_id):    
                     tasks_remaining = Task.query.first()
                     if not tasks_remaining:
                         seed_tasks()
@@ -94,70 +94,70 @@ if __name__ == "__main__":
                         console.print("Input [green]all[/green] to show all tasks.")
                     console.print("Input [red]exit[/red] to leave the game.") 
 
-                    def task_select(username, difficulty):
+                    def task_select(username, difficulty, user_id):
                         task_response = input()
                         if task_response.lower() == "exit":
                             goodbye(username)
                         elif task_response.lower() == "refresh":
                             seed_tasks()
-                            load_tasks(username, None, difficulty) 
+                            load_tasks(username, None, difficulty, user_id) 
                         elif task_response.lower() == "add":
-                            def create_task(username, difficulty):
+                            def create_task(username, difficulty, user_id):
                                 print_quickly("-----------------------------------------------------------------------------------------------------")
                                 console.print("Log a New Task", style="magenta bold", justify="center")
                                 console.print("Create a new task with a 50% reward", style="magenta", justify="center")
                                 print_quickly("-----------------------------------------------------------------------------------------------------")
                                 console.print("Please enter a [magenta]task name[/magenta] or type [red]back[/red] to return to the task menu.")
                                 new_task_name = input()
-                                def enter_name(username, difficulty):
+                                def enter_name(username, difficulty, user_id):
                                     if new_task_name.lower() != "back":
                                         print_quickly("-----------------------------------------------------------------------------------------------------")
                                         console.print("Please enter the [magenta]resource[/magenta] this task will effect or type [red]back[/red] to return to the task menu.")
                                         new_task_resource = input()
-                                        def enter_resource(username, difficulty):
+                                        def enter_resource(username, difficulty, user_id):
                                             if new_task_resource.lower() == "air" or new_task_resource.lower() == "food" or new_task_resource.lower() == "fuel" or new_task_resource.lower() == "water":
                                                 print_quickly("-----------------------------------------------------------------------------------------------------")
                                                 console.print(f"Would you like to log the task [bold magenta]{new_task_name}[/bold magenta] to attempt to increase your [bold magenta]{new_task_resource}[/bold magenta] supply by 50%?")
                                                 console.print("Enter [green]yes[/green] to log task or [red]back[/red] to return to task menu.")
                                                 create_task_response = input()
-                                                def submit_task(username, difficulty):
+                                                def submit_task(username, difficulty, user_id):
                                                     if create_task_response.lower() == "yes":
                                                         add_task(new_task_name, new_task_resource)
                                                         add_task_sound()
-                                                        load_tasks(username, None, difficulty)
+                                                        load_tasks(username, None, difficulty, user_id)
                                                     elif create_task_response.lower() == "back":
-                                                        load_tasks(username, None, difficulty)
+                                                        load_tasks(username, None, difficulty, user_id)
                                                     else:
                                                         console.print("Invalid input, please try again.", style="red")
-                                                        enter_resource(username, difficulty)
-                                                submit_task(username, difficulty)
+                                                        enter_resource(username, difficulty, user_id)
+                                                submit_task(username, difficulty, user_id)
                                             elif new_task_resource.lower() == "back":
-                                                load_tasks(username, None, difficulty)
+                                                load_tasks(username, None, difficulty, user_id)
                                             else:
                                                 console.print("Invalid input, please try again.", style="red")
-                                                enter_name(username, difficulty)
-                                        enter_resource(username, difficulty)
+                                                enter_name(username, difficulty, user_id)
+                                        enter_resource(username, difficulty, user_id)
                                     else:
-                                        load_tasks(username, None, difficulty)
-                                enter_name(username, difficulty)
-                            create_task(username, difficulty)    
+                                        load_tasks(username, None, difficulty, user_id)
+                                enter_name(username, difficulty, user_id)
+                            create_task(username, difficulty, user_id)    
                         elif task_response.lower() == "all":
-                            load_tasks(username, None, difficulty)   
+                            load_tasks(username, None, difficulty, user_id)   
                         elif task_response.lower() == "air":
-                            load_tasks(username, "air", difficulty)
+                            load_tasks(username, "air", difficulty, user_id)
                         elif task_response.lower() == "food":
-                            load_tasks(username, "food", difficulty)
+                            load_tasks(username, "food", difficulty, user_id)
                         elif task_response.lower() == "fuel":
-                            load_tasks(username, "fuel", difficulty)
+                            load_tasks(username, "fuel", difficulty, user_id)
                         elif task_response.lower() == "water":
-                            load_tasks(username, "water", difficulty)
+                            load_tasks(username, "water", difficulty, user_id)
                         elif task_response in current_tasks:                
                             task_to_do = db.session.get(Task, {task_response})
                             print_quickly("-----------------------------------------------------------------------------------------------------")
                             console.print(f"Would you like to [green italic]{task_to_do.name}[/green italic] and replenish your {task_to_do.resource.name} supply by {task_to_do.reward}%?")
                             console.print("Input [green]yes[/green] to attempt task or [red]back[/red] to select another task.")
                             print_quickly("-----------------------------------------------------------------------------------------------------")                        
-                            def execute_task(username, difficulty):      
+                            def execute_task(username, difficulty, user_id):      
                                 attempt_task = input()
                                 if attempt_task.lower() == "yes":
                                     resource_to_update = db.session.get(Resource, {task_to_do.resource.id})            
@@ -177,35 +177,40 @@ if __name__ == "__main__":
                                         db.session.commit()                 
                                         #return to main menu
                                         decrease_resource(difficulty)
+                                        #INCREMENT TURNS
+                                        increment_turns(user_id)
                                         powerup()
                                         random_event()
-                                        task_menu(username, difficulty)
+                                        task_menu(username, difficulty, user_id)
                                     else:
                                         print_quickly("-----------------------------------------------------------------------------------------------------")
                                         console.print(f"Your attempt to {task_to_do.name} has failed, please try again.", style="red")
                                         decrease_resource(difficulty)
+                                        #INCREMENT TURNS
+                                        increment_turns(user_id)
                                         powerdown()
                                         random_event()
-                                        task_menu(username, difficulty)
+                                        task_menu(username, difficulty, user_id)
                                 elif attempt_task.lower() == "back":
                                     random_event()
-                                    task_menu(username, difficulty)
+                                    task_menu(username, difficulty, user_id)
                                 else:
                                     console.print("Invalid input, please try again.", style="red")
-                                    execute_task(username, difficulty)
-                            execute_task(username, difficulty)
+                                    execute_task(username, difficulty, user_id)
+                            execute_task(username, difficulty, user_id)
                         else:
                             console.print("Invalid input, please try again.", style="red")
-                            task_select(username, difficulty)
-                    task_select(username, difficulty)    
-                load_tasks(username, None, difficulty)
+                            task_select(username, difficulty, user_id)
+                    task_select(username, difficulty, user_id)    
+                load_tasks(username, None, difficulty, user_id)
             else:
-                you_win(username)
+                you_win(username, user_id)
+
         else:
             you_died(username)
 
 
-    def main_menu(username, difficulty):
+    def main_menu(username, difficulty, user_id):
         print("""\
                   
                       .    _     *       \|/   .       .      -*-              +
@@ -216,7 +221,7 @@ if __name__ == "__main__":
                       _.'-----'-._     *                  .
                     /             \__.__.--._______________
             """)
-        task_menu(username, difficulty)  
+        task_menu(username, difficulty, user_id)  
 
 
     def welcome():
@@ -248,9 +253,32 @@ if __name__ == "__main__":
                 ██║ ╚═╝ ██║██║  ██║██║  ██║███████║    ██████╔╝██║  ██║███████║███████╗
                 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝          
               """)
+
+        score_table = Table(show_header=True, title="LEADERBOARD", title_style="bold cyan", header_style="none", border_style="cyan", show_lines=True, caption="Try your luck to earn a spot on the leaderboard.")
+        score_table.add_column("Player Name", justify="left")
+        score_table.add_column("Fewest Turns to Win", justify="left")
+        current_scores = []
+        scores = Score.query.filter_by(game_won = True).order_by(Score.num_turns).all()
+
+        for score in scores:
+            score_table.add_row(
+                f"{score.username}",
+                f"{score.num_turns}"
+            )
+        current_scores.append(f"{score.id}")
+        console.print(Align.center(score_table))
+
+
         console.print("Please enter your name to begin......", style="bold magenta", justify="center")
         intro_sound()
         username = input()
+        
+        # ADD USER TO DATABASE WITH SCORE ZERO AND START COUNTING FROM HERE EVERY TIME THEY TAKE A TURN
+        score = Score(username = username, num_turns = 0)
+        db.session.add(score)
+        db.session.commit()
+        user_id = score.id
+
         print_quickly("-----------------------------------------------------------------------------------------------------")
         console.print(f"Welcome to the UN Mars Base, Commander [bold magenta]{username}[/bold magenta]!")
         print_quickly("-----------------------------------------------------------------------------------------------------")
@@ -272,10 +300,10 @@ if __name__ == "__main__":
             begin_res = input()
             if begin_res.lower() == "start":
                 difficulty = "easy"
-                main_menu(username, difficulty)
+                main_menu(username, difficulty, user_id)
             elif begin_res.lower() == "hard":
                 difficulty = "hard"
-                main_menu(username, difficulty)
+                main_menu(username, difficulty, user_id)
             elif begin_res.lower() == "exit":
                 goodbye(username) 
             else:

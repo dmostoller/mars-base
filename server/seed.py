@@ -10,6 +10,12 @@ if __name__ == "__main__":
         Resource.query.delete()
         Task.query.delete()
 
+        # dave_high_score = Score(username = "Dave", num_turns = 21, game_won = True)
+        # yasi_high_score = Score(username = "Yasi", num_turns = 6, game_won = True)
+        # db.session.add(dave_high_score)
+        # db.session.add(yasi_high_score)
+        # db.session.commit()
+
         print("Loading available resources......")
 
         air = Resource(name = "Air", quantity = 50)
