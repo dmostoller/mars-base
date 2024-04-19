@@ -25,6 +25,10 @@ def print_quickly(output):
 def descision():
     return random.random() < 0.50
 
+def increment_turns(id):
+    score = Score.query.filter_by(id=id).first()
+    score.num_turns += 1
+    db.session.commit()
 
 def decrease_resource(difficulty):
     if difficulty == "hard":
@@ -148,7 +152,10 @@ def you_died(username):
     console.print(f"One or more of the base's resources were depleted. Better luck next time, Commander [bold]{username}[/bold].", style="magenta", justify="center")
     lose_sound()
 
-def you_win(username):
+def you_win(username, user_id):
+    score = Score.query.filter_by(id=user_id).first()
+    score.game_won = True
+    db.session.commit()
     print_quickly("-----------------------------------------------------------------------------------------------------")
     print("""\
                                     
@@ -447,4 +454,5 @@ def random_event():
                 """)
             goodnews() 
    
-                
+        
+
