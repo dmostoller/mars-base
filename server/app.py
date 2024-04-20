@@ -205,7 +205,6 @@ if __name__ == "__main__":
                 load_tasks(username, None, difficulty, user_id)
             else:
                 you_win(username, user_id)
-
         else:
             you_died(username)
 
@@ -255,17 +254,21 @@ if __name__ == "__main__":
               """)
 
         score_table = Table(show_header=True, title="LEADERBOARD", title_style="bold cyan", header_style="none", border_style="cyan", show_lines=True, caption="Try your luck to earn a spot on the leaderboard.")
-        score_table.add_column("Player Name", justify="left")
-        score_table.add_column("Fewest Turns to Win", justify="left")
+        score_table.add_column("Rank", justify="center" )
+        score_table.add_column("Player Name", justify="center")
+        score_table.add_column("Fewest Turns to Win", justify="center")
         current_scores = []
         scores = Score.query.filter_by(game_won = True).order_by(Score.num_turns).all()
-
-        for score in scores:
-            score_table.add_row(
-                f"{score.username}",
-                f"{score.num_turns}"
-            )
-        current_scores.append(f"{score.id}")
+        table_index = 0
+        if scores:
+            for score in scores:
+                table_index += 1
+                score_table.add_row(
+                    f"{table_index}",
+                    f"{score.username}",
+                    f"{score.num_turns}"
+                )
+            current_scores.append(f"{score.id}")
         console.print(Align.center(score_table))
 
 
