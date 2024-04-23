@@ -53,13 +53,14 @@ def resource_depleted():
             return True
 
 def resources_filled():
-    resources_full = False
-    resources = Resource.query.all()
-    for resource in resources:
-        if resource.quantity >= 100:
-            resources_full = True
-        else:
-            resources_full = False
+    food = Resource.query.filter_by(name=food).all()
+    water = Resource.query.filter_by(name=water).all()
+    fuel = Resource.query.filter_by(name=fuel).all()
+    air = Resource.query.filter_by(name=air).all()
+    if food.quantity >= 100 & water.quantity >= 100 & fuel.quantity >= 100 & air.quantity >= 100:
+        resources_full = True
+    else:
+        resources_full = False
     return resources_full
 
 
